@@ -1,11 +1,11 @@
-/**
+/** 
   ******************************************************************************
-  * @file    FreeRTOS/FreeRTOS_Timers/Src/stm32l4xx_it.c
+  * @file    GPIO/GPIO_IOToggle/Src/stm32l4xx_it.c
   * @author  MCD Application Team
   * @version V1.8.0
   * @date    21-April-2017
   * @brief   Main Interrupt Service Routines.
-  *          This file provides template for all exceptions handler and 
+  *          This file provides template for all exceptions handler and
   *          peripherals interrupt service routine.
   ******************************************************************************
   * @attention
@@ -40,11 +40,20 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32l4xx_it.h"
-#include "cmsis_os.h"
+
+/** @addtogroup STM32L4xx_HAL_Examples
+  * @{
+  */
+
+/** @addtogroup GPIO_IOToggle
+  * @{
+  */
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
+/* Private variables ---------------------------------------------------------*/
+
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -114,11 +123,29 @@ void UsageFault_Handler(void)
 }
 
 /**
+  * @brief  This function handles SVCall exception.
+  * @param  None
+  * @retval None
+  */
+void SVC_Handler(void)
+{
+}
+
+/**
   * @brief  This function handles Debug Monitor exception.
   * @param  None
   * @retval None
   */
 void DebugMon_Handler(void)
+{
+}
+
+/**
+  * @brief  This function handles PendSVC exception.
+  * @param  None
+  * @retval None
+  */
+void PendSV_Handler(void)
 {
 }
 
@@ -129,7 +156,7 @@ void DebugMon_Handler(void)
   */
 void SysTick_Handler(void)
 {
-  osSystickHandler();
+  HAL_IncTick();
 }
 
 /******************************************************************************/
@@ -147,5 +174,14 @@ void SysTick_Handler(void)
 /*void PPP_IRQHandler(void)
 {
 }*/
+
+
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

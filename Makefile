@@ -19,7 +19,7 @@
 # edited for the STM32F4-Discovery
 
 # A name common to all output files (elf, map, hex, bin, lst)
-TARGET     = blink
+TARGET     = leprogram
 
 # Take a look into $(CUBE_DIR)/Drivers/BSP for available BSPs
 # name needed in upper case and lower case
@@ -48,18 +48,27 @@ LDFILE     = $(EXAMPLE)/SW4STM32/$(BOARD_UC)/$(MCU_UC)Tx_FLASH.ld
 SRCS       = main.c
 SRCS      += system_$(MCU_FAMILY).c
 SRCS      += stm32l4xx_it.c
+SRCS      += stm32l4xx_hal_timebase_tim.c
 
 # Basic HAL libraries
-SRCS      += stm32l4xx_hal_rcc.c stm32l4xx_hal_rcc_ex.c stm32l4xx_hal.c stm32l4xx_hal_cortex.c stm32l4xx_hal_gpio.c stm32l4xx_hal_pwr_ex.c $(BSP_BASE).c
+SRCS      += stm32l4xx_hal_rcc.c stm32l4xx_hal_rcc_ex.c stm32l4xx_hal.c stm32l4xx_hal_cortex.c stm32l4xx_hal_gpio.c stm32l4xx_hal_pwr_ex.c stm32l4xx_hal_tim.c $(BSP_BASE).c
+SRCS      += stm32l4xx_hal_tim_ex.c stm32l4xx_hal_uart.c stm32l4xx_hal_uart_ex.c
+
+# FreeRTOS stuff
+SRCS      += croutine.c event_groups.c list.c queue.c tasks.c timers.c
+SRCS      += port.c cmsis_os.c
+SRCS      += heap_4.c
+SRCS      += mpu_wrappers.c
 
 # Directories
-OCD_DIR    = /usr/share/openocd/scripts
+OCD_DIR    = /usr/local/share/openocd/scripts
 
 CUBE_DIR   = cube
 
 BSP_DIR    = $(CUBE_DIR)/Drivers/BSP/$(BOARD_UC)
 HAL_DIR    = $(CUBE_DIR)/Drivers/STM32L4xx_HAL_Driver
 CMSIS_DIR  = $(CUBE_DIR)/Drivers/CMSIS
+FREERTOS_DIR = $(CUBE_DIR)/Middlewares/Third_Party/FreeRTOS/Source
 
 DEV_DIR    = $(CMSIS_DIR)/Device/ST/STM32L4xx
 
@@ -90,11 +99,15 @@ DEFS       = -D$(MCU_MC) -DUSE_HAL_DRIVER
 DEFS       += -DUSE_DBPRINTF
 
 # Include search paths (-I)
-INCS       = -Isrc
+INCS       = -Iinc
 INCS      += -I$(BSP_DIR)
 INCS      += -I$(CMSIS_DIR)/Include
 INCS      += -I$(DEV_DIR)/Include
 INCS      += -I$(HAL_DIR)/Inc
+INCS      += -I$(FREERTOS_DIR)/include
+INCS      += -I$(FREERTOS_DIR)/CMSIS_RTOS
+INCS      += -I$(FREERTOS_DIR)/portable/GCC/ARM_CM4F
+
 
 # Library search paths
 LIBS       = -L$(CMSIS_DIR)/Lib
@@ -117,6 +130,12 @@ VPATH      = ./src
 VPATH     += $(BSP_DIR)
 VPATH     += $(HAL_DIR)/Src
 VPATH     += $(DEV_DIR)/Source/
+VPATH     += $(FREERTOS_DIR)
+VPATH     += $(FREERTOS_DIR)/portable
+VPATH     += $(FREERTOS_DIR)/CMSIS_RTOS
+VPATH     += $(FREERTOS_DIR)/portable/GCC/ARM_CM4F
+VPATH     += $(FREERTOS_DIR)/portable/MemMang
+VPATH     += $(FREERTOS_DIR)/portable/Common
 
 OBJS       = $(addprefix obj/,$(SRCS:.c=.o))
 DEPS       = $(addprefix dep/,$(SRCS:.c=.d))
